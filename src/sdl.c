@@ -92,13 +92,22 @@ mrb_sdl_set_video_mode(mrb_state* mrb, mrb_value self)
   return mrb_sdl_surface_wrap(mrb, surface);
 }
 
+mrb_value
+mrb_sdl_gl_swap_buffers(mrb_state* mrb, mrb_value self)
+{
+  SDL_GL_SwapBuffers();
+  return self;
+}
+
 void
 mrb_mruby_sdl_gem_init(mrb_state* mrb) {
   struct RClass *sdl_class = mrb_define_module(mrb, "SDL");
   mrb_define_class_method(mrb, sdl_class, "init", mrb_sdl_init, MRB_ARGS_NONE());
   mrb_define_class_method(mrb, sdl_class, "quit", mrb_sdl_quit, MRB_ARGS_NONE());
   mrb_define_class_method(mrb, sdl_class, "set_video_mode", mrb_sdl_set_video_mode, MRB_ARGS_REQ(4));
-  mrb_define_class_method(mrb, sdl_class, "poll_event", mrb_sdl_poll_event, MRB_ARGS_ANY());
+  mrb_define_class_method(mrb, sdl_class, "poll_event", mrb_sdl_poll_event, MRB_ARGS_NONE());
+
+  mrb_define_class_method(mrb, sdl_class, "swap_buffers", mrb_sdl_gl_swap_buffers, MRB_ARGS_NONE());
 
   init_mrb_sdl_surface(mrb);
   init_mrb_sdl_event(mrb);
