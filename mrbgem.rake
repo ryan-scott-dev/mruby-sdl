@@ -3,11 +3,14 @@ MRuby::Gem::Specification.new('mruby-sdl') do |spec|
   spec.authors = 'Ryan Scott'
   spec.version = '0.1.0'
 
-  spec.linker.libraries << %w(SDL)
+  spec.cc.include_paths << "/Users/administrator/SDL/include"
+
+  spec.linker.library_paths << "/Users/administrator/SDL/lib"
+  spec.linker.libraries << %w(SDL2)
 
   if ENV['OS'] == 'Windows_NT'
     spec.linker.libraries << %w(SDLmain)
   end
 
-  spec.requirements << "SDL >= 1.2.15"
+  spec.requirements << "SDL >= 2.0.0"
 end
