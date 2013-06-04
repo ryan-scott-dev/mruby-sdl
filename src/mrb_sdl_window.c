@@ -99,6 +99,15 @@ mrb_sdl_window_create(mrb_state *mrb, mrb_value self)
   return mrb_sdl_window_wrap(mrb, window);
 }
 
+mrb_value
+mrb_sdl_window_destroy(mrb_state *mrb, mrb_value self)
+{
+  struct mrb_sdl_window* window = mrb_sdl_window_get_ptr(mrb, self);
+  SDL_DestroyWindow(window->window);
+  
+  return self;
+}
+
 void
 init_mrb_sdl_window(mrb_state* mrb)
 {
@@ -106,4 +115,5 @@ init_mrb_sdl_window(mrb_state* mrb)
   MRB_SET_INSTANCE_TT(mrb_sdl_window_class, MRB_TT_DATA);
 
   mrb_define_class_method(mrb, mrb_sdl_window_class, "create", mrb_sdl_window_create, ARGS_REQ(6));
+  mrb_define_method(mrb, mrb_sdl_window_class, "destroy", mrb_sdl_window_destroy, ARGS_NONE());
 }
