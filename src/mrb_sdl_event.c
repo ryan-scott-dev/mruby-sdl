@@ -162,9 +162,9 @@ mrb_sdl_event_inspect(mrb_state* mrb, mrb_value self)
 }
 
 void
-init_mrb_sdl_event(mrb_state* mrb)
+init_mrb_sdl_event(mrb_state* mrb, struct RClass* mrb_sdl_class)
 {
-  mrb_sdl_event_class = mrb_define_class(mrb, "Event", mrb->object_class);
+  mrb_sdl_event_class = mrb_define_class_under(mrb, mrb_sdl_class, "Event", mrb->object_class);
   MRB_SET_INSTANCE_TT(mrb_sdl_event_class, MRB_TT_DATA);
 
   mrb_define_method(mrb, mrb_sdl_event_class, "type", mrb_sdl_event_type, MRB_ARGS_NONE());

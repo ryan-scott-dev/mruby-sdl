@@ -14,7 +14,7 @@ struct mrb_sdl_event
 
 void mrb_sdl_event_free(mrb_state *mrb, void *p);
 
-void init_mrb_sdl_event(mrb_state* mrb);
+void init_mrb_sdl_event(mrb_state* mrb, struct RClass* mrb_sdl_class);
 mrb_value mrb_sdl_event_wrap(mrb_state *mrb, SDL_Event event);
 struct mrb_sdl_event* mrb_sdl_event_get_ptr(mrb_state* mrb, mrb_value value);
 
