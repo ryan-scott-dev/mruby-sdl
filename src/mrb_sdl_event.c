@@ -146,7 +146,8 @@ mrb_sdl_event_type(mrb_state *mrb, mrb_value self)
   return mrb_sdl_event_type_to_sym(mrb, mrb_event->event.type);
 }
 
-mrb_value mrb_sdl_event_inspect(mrb_state* mrb, mrb_value self)
+mrb_value 
+mrb_sdl_event_inspect(mrb_state* mrb, mrb_value self)
 {
   char buf[256];
   int len;

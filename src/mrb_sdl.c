@@ -4,6 +4,7 @@
 
 #include "mrb_sdl_event.h"
 #include "mrb_sdl_window.h"
+#include "mrb_sdl_gl_context.h"
 
 mrb_value
 mrb_sdl_init(mrb_state* mrb, mrb_value self)
@@ -30,15 +31,31 @@ mrb_sdl_poll_event(mrb_state* mrb, mrb_value self)
   return mrb_nil_value();
 }
 
+}
+
+mrb_value
+mrb_sdl_set_gl_version(mrb_state* mrb, mrb_value self)
+{
+  mrb_int major, minor;
+  mrb_get_args(mrb, "ii", &major, &minor);
+
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, major);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minor);
+
+  return self;
+}
+
 void
 mrb_mruby_sdl_gem_init(mrb_state* mrb) {
   struct RClass *sdl_class = mrb_define_module(mrb, "SDL");
   mrb_define_class_method(mrb, sdl_class, "init", mrb_sdl_init, MRB_ARGS_NONE());
   mrb_define_class_method(mrb, sdl_class, "quit", mrb_sdl_quit, MRB_ARGS_NONE());
   mrb_define_class_method(mrb, sdl_class, "poll_event", mrb_sdl_poll_event, MRB_ARGS_NONE());
+  mrb_define_class_method(mrb, sdl_class, "set_gl_version", mrb_sdl_set_gl_version, MRB_ARGS_REQ(2));
 
   init_mrb_sdl_window(mrb);
   init_mrb_sdl_event(mrb);
+  init_mrb_sdl_gl_context(mrb);
 }
 
 void

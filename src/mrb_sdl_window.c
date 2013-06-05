@@ -8,6 +8,8 @@
 #include <mruby/array.h>
 #include <mruby/string.h>
 
+#include "mrb_sdl_gl_context.h"
+
 static struct RClass* mrb_sdl_window_class = NULL;
 
 struct mrb_data_type mrb_sdl_window_get_ptr_type = { "Window", mrb_sdl_window_free };
@@ -105,7 +107,17 @@ mrb_sdl_window_destroy(mrb_state *mrb, mrb_value self)
   struct mrb_sdl_window* window = mrb_sdl_window_get_ptr(mrb, self);
   SDL_DestroyWindow(window->window);
   
-  return self;
+  return mrb_nil_value();
+}
+
+mrb_value
+mrb_sdl_window_create_gl_context(mrb_state *mrb, mrb_value self)
+{
+  SDL_GLContext context;
+  struct mrb_sdl_window* window = mrb_sdl_window_get_ptr(mrb, self);
+  context = SDL_GL_CreateContext(window->window);
+  
+  return mrb_sdl_gl_context_wrap(mrb, context);
 }
 
 void
@@ -116,4 +128,6 @@ init_mrb_sdl_window(mrb_state* mrb)
 
   mrb_define_class_method(mrb, mrb_sdl_window_class, "create", mrb_sdl_window_create, ARGS_REQ(6));
   mrb_define_method(mrb, mrb_sdl_window_class, "destroy", mrb_sdl_window_destroy, ARGS_NONE());
+
+  mrb_define_method(mrb, mrb_sdl_window_class, "create_gl_context", mrb_sdl_window_create_gl_context, ARGS_NONE());
 }
