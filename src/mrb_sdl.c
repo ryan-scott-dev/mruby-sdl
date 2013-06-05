@@ -5,6 +5,7 @@
 #include "mrb_sdl_event.h"
 #include "mrb_sdl_window.h"
 #include "mrb_sdl_gl_context.h"
+#include "mrb_sdl_gl.h"
 
 static struct RClass* mrb_sdl_class = NULL;
 
@@ -59,15 +60,17 @@ mrb_sdl_delay(mrb_state* mrb, mrb_value self)
 void
 mrb_mruby_sdl_gem_init(mrb_state* mrb) {
   mrb_sdl_class = mrb_define_module(mrb, "SDL");
-  mrb_define_class_method(mrb, mrb_sdl_class, "init", mrb_sdl_init, MRB_ARGS_NONE());
-  mrb_define_class_method(mrb, mrb_sdl_class, "quit", mrb_sdl_quit, MRB_ARGS_NONE());
-  mrb_define_class_method(mrb, mrb_sdl_class, "poll_event", mrb_sdl_poll_event, MRB_ARGS_NONE());
-  mrb_define_class_method(mrb, mrb_sdl_class, "set_gl_version", mrb_sdl_set_gl_version, MRB_ARGS_REQ(2));
-  mrb_define_class_method(mrb, mrb_sdl_class, "delay", mrb_sdl_delay, MRB_ARGS_REQ(1));
+  mrb_define_module_function(mrb, mrb_sdl_class, "init", mrb_sdl_init, MRB_ARGS_NONE());
+  mrb_define_module_function(mrb, mrb_sdl_class, "quit", mrb_sdl_quit, MRB_ARGS_NONE());
+  mrb_define_module_function(mrb, mrb_sdl_class, "poll_event", mrb_sdl_poll_event, MRB_ARGS_NONE());
+  mrb_define_module_function(mrb, mrb_sdl_class, "set_gl_version", mrb_sdl_set_gl_version, MRB_ARGS_REQ(2));
+  mrb_define_module_function(mrb, mrb_sdl_class, "delay", mrb_sdl_delay, MRB_ARGS_REQ(1));
 
   init_mrb_sdl_window(mrb, mrb_sdl_class);
   init_mrb_sdl_event(mrb, mrb_sdl_class);
   init_mrb_sdl_gl_context(mrb, mrb_sdl_class);
+
+  init_mrb_sdl_gl(mrb);
 }
 
 void

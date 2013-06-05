@@ -6,7 +6,7 @@ MRuby::Gem::Specification.new('mruby-sdl') do |spec|
   spec.cc.include_paths << "/Users/administrator/SDL/include"
 
   spec.linker.library_paths << "/Users/administrator/SDL/lib"
-  spec.linker.libraries << %w(SDL2)
+  spec.linker.libraries << %w(SDL2 GL)
 
   if ENV['OS'] == 'Windows_NT'
     spec.linker.libraries << %w(SDLmain)
