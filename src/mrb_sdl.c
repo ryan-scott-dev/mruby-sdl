@@ -31,8 +31,6 @@ mrb_sdl_poll_event(mrb_state* mrb, mrb_value self)
   return mrb_nil_value();
 }
 
-}
-
 mrb_value
 mrb_sdl_set_gl_version(mrb_state* mrb, mrb_value self)
 {
@@ -45,6 +43,17 @@ mrb_sdl_set_gl_version(mrb_state* mrb, mrb_value self)
   return self;
 }
 
+mrb_value
+mrb_sdl_delay(mrb_state* mrb, mrb_value self)
+{
+  mrb_int duration;
+  mrb_get_args(mrb, "i", &duration);
+  
+  SDL_Delay(duration);
+
+  return self;
+}
+
 void
 mrb_mruby_sdl_gem_init(mrb_state* mrb) {
   struct RClass *sdl_class = mrb_define_module(mrb, "SDL");
@@ -52,6 +61,7 @@ mrb_mruby_sdl_gem_init(mrb_state* mrb) {
   mrb_define_class_method(mrb, sdl_class, "quit", mrb_sdl_quit, MRB_ARGS_NONE());
   mrb_define_class_method(mrb, sdl_class, "poll_event", mrb_sdl_poll_event, MRB_ARGS_NONE());
   mrb_define_class_method(mrb, sdl_class, "set_gl_version", mrb_sdl_set_gl_version, MRB_ARGS_REQ(2));
+  mrb_define_class_method(mrb, sdl_class, "delay", mrb_sdl_delay, MRB_ARGS_REQ(1));
 
   init_mrb_sdl_window(mrb);
   init_mrb_sdl_event(mrb);

@@ -120,6 +120,15 @@ mrb_sdl_window_create_gl_context(mrb_state *mrb, mrb_value self)
   return mrb_sdl_gl_context_wrap(mrb, context);
 }
 
+mrb_value
+mrb_sdl_swap_gl_window(mrb_state *mrb, mrb_value self)
+{
+  struct mrb_sdl_window* window = mrb_sdl_window_get_ptr(mrb, self);
+  SDL_GL_SwapWindow(window->window);
+  
+  return self;
+}
+
 void
 init_mrb_sdl_window(mrb_state* mrb)
 {
@@ -130,4 +139,5 @@ init_mrb_sdl_window(mrb_state* mrb)
   mrb_define_method(mrb, mrb_sdl_window_class, "destroy", mrb_sdl_window_destroy, ARGS_NONE());
 
   mrb_define_method(mrb, mrb_sdl_window_class, "create_gl_context", mrb_sdl_window_create_gl_context, ARGS_NONE());
+  mrb_define_method(mrb, mrb_sdl_window_class, "swap_gl_window", mrb_sdl_swap_gl_window, ARGS_NONE());
 }
