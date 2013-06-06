@@ -6,13 +6,17 @@
 #include "mrb_sdl_window.h"
 #include "mrb_sdl_gl_context.h"
 #include "mrb_sdl_gl.h"
+#include "mrb_sdl_glew.h"
 
 static struct RClass* mrb_sdl_class = NULL;
 
 mrb_value
 mrb_sdl_init(mrb_state* mrb, mrb_value self)
 {
-  SDL_Init(SDL_INIT_EVERYTHING);
+  if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+    mrb_raisef(mrb, E_RUNTIME_ERROR, "Error initializing sdl: %s", SDL_GetError());
+  }
+
   return self;
 }
 
@@ -71,6 +75,7 @@ mrb_mruby_sdl_gem_init(mrb_state* mrb) {
   init_mrb_sdl_gl_context(mrb, mrb_sdl_class);
 
   init_mrb_sdl_gl(mrb);
+  init_mrb_sdl_glew(mrb);
 }
 
 void
