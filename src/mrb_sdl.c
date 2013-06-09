@@ -14,7 +14,7 @@ mrb_value
 mrb_sdl_init(mrb_state* mrb, mrb_value self)
 {
   if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
-    mrb_raisef(mrb, E_RUNTIME_ERROR, "Error initializing sdl: %s", SDL_GetError());
+    mrb_raisef(mrb, E_RUNTIME_ERROR, "Error initializing sdl: %S", mrb_str_new_cstr(mrb, SDL_GetError()));
   }
 
   return self;

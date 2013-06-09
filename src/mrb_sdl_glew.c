@@ -9,7 +9,7 @@ mrb_sdl_glew_init(mrb_state* mrb, mrb_value self)
 {
   GLenum err = glewInit();
   if (err != GLEW_OK) {
-    mrb_raisef(mrb, E_RUNTIME_ERROR, "Error initializing glew: %s", glewGetErrorString(err));
+    mrb_raisef(mrb, E_RUNTIME_ERROR, "Error initializing glew: %S", mrb_str_new_cstr(mrb, glewGetErrorString(err)));
   }
   return self;
 }

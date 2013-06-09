@@ -99,7 +99,7 @@ mrb_sdl_window_create(mrb_state *mrb, mrb_value self)
 
   window = SDL_CreateWindow(mrb_string_value_ptr(mrb, name), x, y, width, height, flags);
   if(!window) {
-    mrb_raisef(mrb, E_RUNTIME_ERROR, "Error creating SDL window: %s", SDL_GetError());
+    mrb_raisef(mrb, E_RUNTIME_ERROR, "Error creating SDL window: %S", mrb_str_new_cstr(mrb, SDL_GetError()));
   }
   return mrb_sdl_window_wrap(mrb, window);
 }
