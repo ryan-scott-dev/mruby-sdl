@@ -11,7 +11,7 @@ MRuby::Gem::Specification.new('mruby-sdl') do |spec|
   spec.linker.library_paths << "/System/Library/Frameworks/OpenGL.framework/Libraries"
   spec.linker.library_paths << "/usr/lib"
 
-  spec.linker.libraries << %w(SDL2 GLEW GL)
+  spec.linker.libraries << %w(SDL2_mixer SDL2 GLEW GL)
 
   if ENV['OS'] == 'Windows_NT'
     spec.linker.libraries << %w(SDLmain)
