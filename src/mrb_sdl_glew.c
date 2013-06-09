@@ -7,11 +7,13 @@ static struct RClass* mrb_sdl_glew_class = NULL;
 mrb_value 
 mrb_sdl_glew_init(mrb_state* mrb, mrb_value self)
 {
+  glewExperimental = GL_TRUE;
+
   GLenum err = glewInit();
   if (err != GLEW_OK) {
     mrb_raisef(mrb, E_RUNTIME_ERROR, "Error initializing glew: %S", mrb_str_new_cstr(mrb, glewGetErrorString(err)));
   }
-  
+
   printf("OpenGL Version: %s\n", glGetString(GL_VERSION));
   printf("GLSL version: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
   printf("Vendor: %s\n", glGetString(GL_VENDOR));
