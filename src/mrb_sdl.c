@@ -63,6 +63,12 @@ mrb_sdl_delay(mrb_state* mrb, mrb_value self)
   return self;
 }
 
+mrb_value
+mrb_sdl_error(mrb_state* mrb, mrb_value self)
+{
+  return mrb_str_new_cstr(mrb, SDL_GetError());
+}
+
 void
 mrb_mruby_sdl_gem_init(mrb_state* mrb) {
   mrb_sdl_class = mrb_define_module(mrb, "SDL");
@@ -71,7 +77,8 @@ mrb_mruby_sdl_gem_init(mrb_state* mrb) {
   mrb_define_module_function(mrb, mrb_sdl_class, "poll_event", mrb_sdl_poll_event, MRB_ARGS_NONE());
   mrb_define_module_function(mrb, mrb_sdl_class, "set_gl_version", mrb_sdl_set_gl_version, MRB_ARGS_REQ(2));
   mrb_define_module_function(mrb, mrb_sdl_class, "delay", mrb_sdl_delay, MRB_ARGS_REQ(1));
-
+  mrb_define_module_function(mrb, mrb_sdl_class, "error", mrb_sdl_error, MRB_ARGS_NONE());
+  
   init_mrb_sdl_window(mrb, mrb_sdl_class);
   init_mrb_sdl_event(mrb, mrb_sdl_class);
   init_mrb_sdl_gl_context(mrb, mrb_sdl_class);
