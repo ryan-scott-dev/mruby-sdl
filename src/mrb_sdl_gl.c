@@ -61,9 +61,21 @@ mrb_sdl_gl_clear(mrb_state* mrb, mrb_value self)
   return self;
 }
 
+mrb_value 
+mrb_sdl_gl_clear(mrb_state* mrb, mrb_value self)
+{
+  GLenum error = glGetError();
+  if (error == GL_NO_ERROR) {
+    return mrb_nil_value();
+  }
+
+  return mrb_fixnum_value(error);
+}
+
 void
 init_mrb_sdl_gl(mrb_state* mrb) {
   mrb_sdl_gl_class = mrb_define_module(mrb, "GL");
   mrb_define_module_function(mrb, mrb_sdl_gl_class, "clear_color", mrb_sdl_gl_clear_color, MRB_ARGS_REQ(4));
   mrb_define_module_function(mrb, mrb_sdl_gl_class, "clear", mrb_sdl_gl_clear, MRB_ARGS_REQ(1));
+  mrb_define_module_function(mrb, mrb_sdl_gl_class, "error", mrb_sdl_gl_error, MRB_ARGS_NONE());
 }
