@@ -62,7 +62,7 @@ mrb_sdl_gl_clear(mrb_state* mrb, mrb_value self)
 }
 
 mrb_value 
-mrb_sdl_gl_clear(mrb_state* mrb, mrb_value self)
+mrb_sdl_gl_error(mrb_state* mrb, mrb_value self)
 {
   GLenum error = glGetError();
   if (error == GL_NO_ERROR) {
