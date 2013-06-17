@@ -161,11 +161,40 @@ mrb_sdl_event_inspect(mrb_state* mrb, mrb_value self)
   return mrb_str_new(mrb, buf, len);
 }
 
+mrb_value
+mrb_sdl_event_keycode_to_sym(mrb_state *mrb, SDL_Keycode keycode)
+{
+  switch (keycode)
+  {
+    case (SDLK_LEFT):
+      return mrb_symbol_value(mrb_intern_cstr(mrb, "left"));
+    case (SDLK_RIGHT):
+      return mrb_symbol_value(mrb_intern_cstr(mrb, "right"));
+    case (SDLK_UP):
+      return mrb_symbol_value(mrb_intern_cstr(mrb, "up"));
+    case (SDLK_DOWN):
+      return mrb_symbol_value(mrb_intern_cstr(mrb, "down"));
+  }
+
+  return mrb_nil_value();
+}
+
+mrb_value
+mrb_sdl_event_key(mrb_state *mrb, mrb_value self)
+{
+  struct mrb_sdl_event* mrb_event;
+  mrb_event = mrb_sdl_event_get_ptr(mrb, self);
+
+  return mrb_sdl_event_keycode_to_sym(mrb, mrb_event->event.key.keysym.sym);
+}
+
 void
 init_mrb_sdl_event(mrb_state* mrb, struct RClass* mrb_sdl_class)
 {
   mrb_sdl_event_class = mrb_define_class_under(mrb, mrb_sdl_class, "Event", mrb->object_class);
   MRB_SET_INSTANCE_TT(mrb_sdl_event_class, MRB_TT_DATA);
+
+  mrb_define_method(mrb, mrb_sdl_event_class, "key", mrb_sdl_event_key, MRB_ARGS_NONE());
 
   mrb_define_method(mrb, mrb_sdl_event_class, "type", mrb_sdl_event_type, MRB_ARGS_NONE());
   mrb_define_method(mrb, mrb_sdl_event_class, "inspect", mrb_sdl_event_inspect, MRB_ARGS_NONE());
