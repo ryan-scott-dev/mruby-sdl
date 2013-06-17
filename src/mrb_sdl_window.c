@@ -132,6 +132,28 @@ mrb_sdl_swap_gl_window(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+mrb_value
+mrb_sdl_width(mrb_state *mrb, mrb_value self)
+{
+  mrb_int width, height;
+
+  struct mrb_sdl_window* window = mrb_sdl_window_get_ptr(mrb, self);
+  SDL_GetWindowSize(window->window, &width, &height);
+
+  return mrb_fixnum_value(width);
+}
+
+mrb_value
+mrb_sdl_height(mrb_state *mrb, mrb_value self)
+{
+  mrb_int width, height;
+
+  struct mrb_sdl_window* window = mrb_sdl_window_get_ptr(mrb, self);
+  SDL_GetWindowSize(window->window, &width, &height);
+  
+  return mrb_fixnum_value(height);
+}
+
 void
 init_mrb_sdl_window(mrb_state* mrb, struct RClass* mrb_sdl_class)
 {
@@ -143,4 +165,7 @@ init_mrb_sdl_window(mrb_state* mrb, struct RClass* mrb_sdl_class)
 
   mrb_define_method(mrb, mrb_sdl_window_class, "create_gl_context", mrb_sdl_window_create_gl_context, ARGS_NONE());
   mrb_define_method(mrb, mrb_sdl_window_class, "swap_gl_window", mrb_sdl_swap_gl_window, ARGS_NONE());
+
+  mrb_define_method(mrb, mrb_sdl_window_class, "width", mrb_sdl_width, ARGS_NONE());
+  mrb_define_method(mrb, mrb_sdl_window_class, "height", mrb_sdl_height, ARGS_NONE());
 }

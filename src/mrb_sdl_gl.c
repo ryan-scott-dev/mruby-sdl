@@ -72,10 +72,22 @@ mrb_sdl_gl_error(mrb_state* mrb, mrb_value self)
   return mrb_fixnum_value(error);
 }
 
+mrb_value 
+mrb_sdl_gl_viewport(mrb_state* mrb, mrb_value self)
+{
+  mrb_int x, y, w, h;
+  mrb_get_args(mrb, "iiii", &x, &y, &w, &h);
+  glViewport(x, y, w, h);
+
+  return self;
+}
+
 void
 init_mrb_sdl_gl(mrb_state* mrb) {
   mrb_sdl_gl_class = mrb_define_module(mrb, "GL");
   mrb_define_module_function(mrb, mrb_sdl_gl_class, "clear_color", mrb_sdl_gl_clear_color, MRB_ARGS_REQ(4));
   mrb_define_module_function(mrb, mrb_sdl_gl_class, "clear", mrb_sdl_gl_clear, MRB_ARGS_REQ(1));
   mrb_define_module_function(mrb, mrb_sdl_gl_class, "error", mrb_sdl_gl_error, MRB_ARGS_NONE());
+
+  mrb_define_module_function(mrb, mrb_sdl_gl_class, "viewport", mrb_sdl_gl_viewport, MRB_ARGS_REQ(4));
 }
