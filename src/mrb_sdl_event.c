@@ -31,9 +31,43 @@ mrb_sdl_event_get_ptr(mrb_state* mrb, mrb_value value)
 }
 
 mrb_value
-mrb_sdl_event_type_to_sym(mrb_state *mrb, unsigned short type)
+mrb_sdl_window_event_type_to_sym(mrb_state *mrb, SDL_Event event)
 {
-  switch (type)
+  switch (event.window.event)
+  {
+    case (SDL_WINDOWEVENT_SHOWN):
+      return mrb_symbol_value(mrb_intern_cstr(mrb, "window_shown"));
+    case (SDL_WINDOWEVENT_EXPOSED):
+      return mrb_symbol_value(mrb_intern_cstr(mrb, "window_exposed"));
+    case (SDL_WINDOWEVENT_MOVED):
+      return mrb_symbol_value(mrb_intern_cstr(mrb, "window_moved"));
+    case (SDL_WINDOWEVENT_RESIZED):
+      return mrb_symbol_value(mrb_intern_cstr(mrb, "window_resized"));
+    case (SDL_WINDOWEVENT_MINIMIZED):
+      return mrb_symbol_value(mrb_intern_cstr(mrb, "window_minimized"));
+    case (SDL_WINDOWEVENT_MAXIMIZED):
+      return mrb_symbol_value(mrb_intern_cstr(mrb, "window_maximized"));
+    case (SDL_WINDOWEVENT_RESTORED):
+      return mrb_symbol_value(mrb_intern_cstr(mrb, "window_restored"));
+    case (SDL_WINDOWEVENT_ENTER):
+      return mrb_symbol_value(mrb_intern_cstr(mrb, "window_enter"));
+    case (SDL_WINDOWEVENT_LEAVE):
+      return mrb_symbol_value(mrb_intern_cstr(mrb, "window_leave"));
+    case (SDL_WINDOWEVENT_FOCUS_GAINED):
+      return mrb_symbol_value(mrb_intern_cstr(mrb, "window_focus_gained"));
+    case (SDL_WINDOWEVENT_FOCUS_LOST):
+      return mrb_symbol_value(mrb_intern_cstr(mrb, "window_focus_lost"));
+    case (SDL_WINDOWEVENT_CLOSE):
+      return mrb_symbol_value(mrb_intern_cstr(mrb, "window_close"));
+  }
+
+  return mrb_symbol_value(mrb_intern_cstr(mrb, "window"));
+}
+
+mrb_value
+mrb_sdl_event_type_to_sym(mrb_state *mrb, SDL_Event event)
+{
+  switch (event.type)
   {
     /* Application Events */
     case (SDL_QUIT):
@@ -41,7 +75,7 @@ mrb_sdl_event_type_to_sym(mrb_state *mrb, unsigned short type)
 
     /* Window Events */
     case (SDL_WINDOWEVENT):
-      return mrb_symbol_value(mrb_intern_cstr(mrb, "window"));
+      return mrb_sdl_window_event_type_to_sym(mrb, event);
     case (SDL_SYSWMEVENT):
       return mrb_symbol_value(mrb_intern_cstr(mrb, "system"));
 
@@ -143,7 +177,7 @@ mrb_sdl_event_type(mrb_state *mrb, mrb_value self)
   struct mrb_sdl_event* mrb_event;
   mrb_event = mrb_sdl_event_get_ptr(mrb, self);
 
-  return mrb_sdl_event_type_to_sym(mrb, mrb_event->event.type);
+  return mrb_sdl_event_type_to_sym(mrb, mrb_event->event);
 }
 
 mrb_value 
@@ -157,7 +191,7 @@ mrb_sdl_event_inspect(mrb_state* mrb, mrb_value self)
   if (!mrb_event) return mrb_nil_value();
 
   len = snprintf(buf, sizeof(buf), "{type: %s}",
-    mrb_sym2name(mrb, mrb_obj_to_sym(mrb, mrb_sdl_event_type_to_sym(mrb, mrb_event->event.type))));
+    mrb_sym2name(mrb, mrb_obj_to_sym(mrb, mrb_sdl_event_type_to_sym(mrb, mrb_event->event))));
   return mrb_str_new(mrb, buf, len);
 }
 
@@ -188,6 +222,24 @@ mrb_sdl_event_key(mrb_state *mrb, mrb_value self)
   return mrb_sdl_event_keycode_to_sym(mrb, mrb_event->event.key.keysym.sym);
 }
 
+mrb_value
+mrb_sdl_event_resize_width(mrb_state *mrb, mrb_value self)
+{
+  struct mrb_sdl_event* mrb_event;
+  mrb_event = mrb_sdl_event_get_ptr(mrb, self);
+
+  return mrb_fixnum_value(mrb_event->event.window.data1);
+}
+
+mrb_value
+mrb_sdl_event_resize_height(mrb_state *mrb, mrb_value self)
+{
+  struct mrb_sdl_event* mrb_event;
+  mrb_event = mrb_sdl_event_get_ptr(mrb, self);
+
+  return mrb_fixnum_value(mrb_event->event.window.data2);
+}
+
 void
 init_mrb_sdl_event(mrb_state* mrb, struct RClass* mrb_sdl_class)
 {
@@ -195,6 +247,9 @@ init_mrb_sdl_event(mrb_state* mrb, struct RClass* mrb_sdl_class)
   MRB_SET_INSTANCE_TT(mrb_sdl_event_class, MRB_TT_DATA);
 
   mrb_define_method(mrb, mrb_sdl_event_class, "key", mrb_sdl_event_key, MRB_ARGS_NONE());
+
+  mrb_define_method(mrb, mrb_sdl_event_class, "resize_width", mrb_sdl_event_resize_width, MRB_ARGS_NONE());
+  mrb_define_method(mrb, mrb_sdl_event_class, "resize_height", mrb_sdl_event_resize_height, MRB_ARGS_NONE());
 
   mrb_define_method(mrb, mrb_sdl_event_class, "type", mrb_sdl_event_type, MRB_ARGS_NONE());
   mrb_define_method(mrb, mrb_sdl_event_class, "inspect", mrb_sdl_event_inspect, MRB_ARGS_NONE());
