@@ -3,7 +3,10 @@
 
 #include <mruby.h>
 
+#ifndef PLATFORM_IOS
 #include <glew.h>
+#endif
+
 #include <SDL2/SDL.h>
 
 void init_mrb_sdl_glew(mrb_state* mrb);
