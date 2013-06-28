@@ -2,9 +2,6 @@
 
 #include <mruby/array.h>
 
-#include <glew.h>
-#include <SDL2/SDL_opengl.h>
-
 static struct RClass* mrb_sdl_gl_class = NULL;
 
 mrb_value 

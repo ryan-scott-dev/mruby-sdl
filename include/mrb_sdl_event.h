@@ -5,6 +5,7 @@
 #include <mruby/class.h>
 #include <mruby/data.h>
 
+#include "mrb_sdl.h"
 #include <SDL2/SDL_events.h>
 
 struct mrb_sdl_event

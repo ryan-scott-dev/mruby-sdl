@@ -7,7 +7,6 @@
 #include "mrb_sdl_gl_context.h"
 #include "mrb_sdl_music.h"
 #include "mrb_sdl_gl.h"
-#include "mrb_sdl_glew.h"
 
 static struct RClass* mrb_sdl_class = NULL;
 
@@ -85,7 +84,6 @@ mrb_mruby_sdl_gem_init(mrb_state* mrb) {
   init_mrb_sdl_music(mrb, mrb_sdl_class);
 
   init_mrb_sdl_gl(mrb);
-  init_mrb_sdl_glew(mrb);
 }
 
 void
