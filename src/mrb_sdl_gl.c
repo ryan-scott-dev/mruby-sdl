@@ -79,6 +79,23 @@ mrb_sdl_gl_viewport(mrb_state* mrb, mrb_value self)
   return self;
 }
 
+mrb_value 
+mrb_sdl_gl_blend_alpha_transparency(mrb_state* mrb, mrb_value self)
+{
+  glEnable (GL_BLEND);
+  glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+  return self;
+}
+
+mrb_value 
+mrb_sdl_gl_blend_opaque (mrb_state* mrb, mrb_value self)
+{
+  glBlendFunc (GL_SRC_ALPHA, GL_ONE); 
+
+  return self;
+}
+
 void
 init_mrb_sdl_gl(mrb_state* mrb) {
   mrb_sdl_gl_class = mrb_define_module(mrb, "GL");
@@ -86,5 +103,8 @@ init_mrb_sdl_gl(mrb_state* mrb) {
   mrb_define_module_function(mrb, mrb_sdl_gl_class, "clear", mrb_sdl_gl_clear, MRB_ARGS_REQ(1));
   mrb_define_module_function(mrb, mrb_sdl_gl_class, "error", mrb_sdl_gl_error, MRB_ARGS_NONE());
 
+  mrb_define_module_function(mrb, mrb_sdl_gl_class, "blend_alpha_transparency", mrb_sdl_gl_blend_alpha_transparency, MRB_ARGS_NONE());
+  mrb_define_module_function(mrb, mrb_sdl_gl_class, "blend_opaque", mrb_sdl_gl_blend_opaque, MRB_ARGS_NONE());
+  
   mrb_define_module_function(mrb, mrb_sdl_gl_class, "viewport", mrb_sdl_gl_viewport, MRB_ARGS_REQ(4));
 }
