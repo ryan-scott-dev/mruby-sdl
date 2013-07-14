@@ -68,6 +68,24 @@ mrb_sdl_error(mrb_state* mrb, mrb_value self)
   return mrb_str_new_cstr(mrb, SDL_GetError());
 }
 
+mrb_value
+mrb_sdl_platform(mrb_state* mrb, mrb_value self)
+{
+  return mrb_str_new_cstr(mrb, SDL_GetPlatform());
+}
+
+mrb_value
+mrb_sdl_key_state_from_name(mrb_state* mrb, mrb_value self)
+{
+  mrb_sym key_sym;
+  mrb_get_args(mrb, "n", &key_sym);
+  
+  SDL_Scancode key = SDL_GetScancodeFromName(mrb_sym2name(mrb, key_sym));
+  const Uint8 *state = SDL_GetKeyboardState(NULL);
+
+  return mrb_bool_value(state[key]);
+}
+
 void
 mrb_mruby_sdl_gem_init(mrb_state* mrb) {
   mrb_sdl_class = mrb_define_module(mrb, "SDL");
@@ -77,6 +95,8 @@ mrb_mruby_sdl_gem_init(mrb_state* mrb) {
   mrb_define_module_function(mrb, mrb_sdl_class, "set_gl_version", mrb_sdl_set_gl_version, MRB_ARGS_REQ(2));
   mrb_define_module_function(mrb, mrb_sdl_class, "delay", mrb_sdl_delay, MRB_ARGS_REQ(1));
   mrb_define_module_function(mrb, mrb_sdl_class, "error", mrb_sdl_error, MRB_ARGS_NONE());
+  mrb_define_module_function(mrb, mrb_sdl_class, "platform", mrb_sdl_platform, MRB_ARGS_NONE());
+  mrb_define_module_function(mrb, mrb_sdl_class, "key_state_from_name", mrb_sdl_key_state_from_name, MRB_ARGS_REQ(1));
   
   init_mrb_sdl_window(mrb, mrb_sdl_class);
   init_mrb_sdl_event(mrb, mrb_sdl_class);

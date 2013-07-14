@@ -3,14 +3,13 @@
 #include <mruby/array.h>
 
 static struct RClass* mrb_sdl_gl_class = NULL;
+unsigned int mrb_sdl_gl_clear_flags = 0;
+mrb_float mrb_sdl_gl_clear_r, mrb_sdl_gl_clear_g, mrb_sdl_gl_clear_b;
 
 mrb_value 
-mrb_sdl_gl_clear_color(mrb_state* mrb, mrb_value self)
+mrb_sdl_gl_set_clear_color(mrb_state* mrb, mrb_value self)
 {
-  mrb_float r, g, b, a;
-  mrb_get_args(mrb, "ffff", &r, &g, &b, &a);
-
-  glClearColor((float)r, (float)g, (float)b, (float)a);
+  mrb_get_args(mrb, "fff", &mrb_sdl_gl_clear_r, &mrb_sdl_gl_clear_g, &mrb_sdl_gl_clear_b);
 
   return self;
 }
@@ -46,14 +45,22 @@ gl_clear_flags_array_to_flags(mrb_state* mrb, mrb_value array)
 }
 
 mrb_value 
-mrb_sdl_gl_clear(mrb_state* mrb, mrb_value self)
+mrb_sdl_gl_set_clear_flags(mrb_state* mrb, mrb_value self)
 {
   unsigned int flags = 0;
   mrb_value flags_array;
   mrb_get_args(mrb, "A", &flags_array);
 
-  flags = gl_clear_flags_array_to_flags(mrb, flags_array);
-  glClear(flags);
+  mrb_sdl_gl_clear_flags = gl_clear_flags_array_to_flags(mrb, flags_array);
+  
+  return self;
+}
+
+mrb_value 
+mrb_sdl_gl_clear(mrb_state* mrb, mrb_value self)
+{
+  glClear(mrb_sdl_gl_clear_flags);
+  glClearColor(mrb_sdl_gl_clear_r, mrb_sdl_gl_clear_g, mrb_sdl_gl_clear_b, 1.0f);
 
   return self;
 }
@@ -79,12 +86,34 @@ mrb_sdl_gl_viewport(mrb_state* mrb, mrb_value self)
   return self;
 }
 
+mrb_value 
+mrb_sdl_gl_blend_alpha_transparency(mrb_state* mrb, mrb_value self)
+{
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  
+  return self;
+}
+
+mrb_value 
+mrb_sdl_gl_blend_opaque (mrb_state* mrb, mrb_value self)
+{
+  glDisable(GL_BLEND);
+  
+  return self;
+}
+
 void
 init_mrb_sdl_gl(mrb_state* mrb) {
   mrb_sdl_gl_class = mrb_define_module(mrb, "GL");
-  mrb_define_module_function(mrb, mrb_sdl_gl_class, "clear_color", mrb_sdl_gl_clear_color, MRB_ARGS_REQ(4));
-  mrb_define_module_function(mrb, mrb_sdl_gl_class, "clear", mrb_sdl_gl_clear, MRB_ARGS_REQ(1));
+  mrb_define_module_function(mrb, mrb_sdl_gl_class, "clear", mrb_sdl_gl_clear, MRB_ARGS_NONE());
+  mrb_define_module_function(mrb, mrb_sdl_gl_class, "set_clear_color", mrb_sdl_gl_set_clear_color, MRB_ARGS_REQ(3));
+  mrb_define_module_function(mrb, mrb_sdl_gl_class, "set_clear_flags", mrb_sdl_gl_set_clear_flags, MRB_ARGS_REQ(1));
+
   mrb_define_module_function(mrb, mrb_sdl_gl_class, "error", mrb_sdl_gl_error, MRB_ARGS_NONE());
 
+  mrb_define_module_function(mrb, mrb_sdl_gl_class, "blend_alpha_transparency", mrb_sdl_gl_blend_alpha_transparency, MRB_ARGS_NONE());
+  mrb_define_module_function(mrb, mrb_sdl_gl_class, "blend_opaque", mrb_sdl_gl_blend_opaque, MRB_ARGS_NONE());
+  
   mrb_define_module_function(mrb, mrb_sdl_gl_class, "viewport", mrb_sdl_gl_viewport, MRB_ARGS_REQ(4));
 }

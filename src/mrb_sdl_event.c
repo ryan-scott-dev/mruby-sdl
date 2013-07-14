@@ -240,6 +240,24 @@ mrb_sdl_event_resize_height(mrb_state *mrb, mrb_value self)
   return mrb_fixnum_value(mrb_event->event.window.data2);
 }
 
+mrb_value
+mrb_sdl_event_mouse_button_x(mrb_state *mrb, mrb_value self)
+{
+  struct mrb_sdl_event* mrb_event;
+  mrb_event = mrb_sdl_event_get_ptr(mrb, self);
+
+  return mrb_fixnum_value(mrb_event->event.button.x);
+}
+
+mrb_value
+mrb_sdl_event_mouse_button_y(mrb_state *mrb, mrb_value self)
+{
+  struct mrb_sdl_event* mrb_event;
+  mrb_event = mrb_sdl_event_get_ptr(mrb, self);
+
+  return mrb_fixnum_value(mrb_event->event.button.y);
+}
+
 void
 init_mrb_sdl_event(mrb_state* mrb, struct RClass* mrb_sdl_class)
 {
@@ -250,6 +268,9 @@ init_mrb_sdl_event(mrb_state* mrb, struct RClass* mrb_sdl_class)
 
   mrb_define_method(mrb, mrb_sdl_event_class, "resize_width", mrb_sdl_event_resize_width, MRB_ARGS_NONE());
   mrb_define_method(mrb, mrb_sdl_event_class, "resize_height", mrb_sdl_event_resize_height, MRB_ARGS_NONE());
+
+  mrb_define_method(mrb, mrb_sdl_event_class, "mouse_button_x", mrb_sdl_event_mouse_button_x, MRB_ARGS_NONE());
+  mrb_define_method(mrb, mrb_sdl_event_class, "mouse_button_y", mrb_sdl_event_mouse_button_y, MRB_ARGS_NONE());
 
   mrb_define_method(mrb, mrb_sdl_event_class, "type", mrb_sdl_event_type, MRB_ARGS_NONE());
   mrb_define_method(mrb, mrb_sdl_event_class, "inspect", mrb_sdl_event_inspect, MRB_ARGS_NONE());
