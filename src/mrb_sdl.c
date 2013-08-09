@@ -13,7 +13,7 @@ static struct RClass* mrb_sdl_class = NULL;
 mrb_value
 mrb_sdl_init(mrb_state* mrb, mrb_value self)
 {
-  if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+  if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO) < 0) {
     mrb_raisef(mrb, E_RUNTIME_ERROR, "Error initializing sdl: %S", mrb_str_new_cstr(mrb, SDL_GetError()));
   }
 
@@ -86,6 +86,20 @@ mrb_sdl_key_state_from_name(mrb_state* mrb, mrb_value self)
   return mrb_bool_value(state[key]);
 }
 
+mrb_value
+mrb_sdl_start_text_input(mrb_state* mrb, mrb_value self)
+{
+  SDL_StartTextInput();
+  return mrb_nil_value();
+}
+
+mrb_value
+mrb_sdl_stop_text_input(mrb_state* mrb, mrb_value self)
+{
+  SDL_StopTextInput();
+  return mrb_nil_value();
+}
+
 void
 mrb_mruby_sdl_gem_init(mrb_state* mrb) {
   mrb_sdl_class = mrb_define_module(mrb, "SDL");
@@ -98,6 +112,9 @@ mrb_mruby_sdl_gem_init(mrb_state* mrb) {
   mrb_define_module_function(mrb, mrb_sdl_class, "platform", mrb_sdl_platform, MRB_ARGS_NONE());
   mrb_define_module_function(mrb, mrb_sdl_class, "key_state_from_name", mrb_sdl_key_state_from_name, MRB_ARGS_REQ(1));
   
+  mrb_define_module_function(mrb, mrb_sdl_class, "start_text_input", mrb_sdl_start_text_input, MRB_ARGS_NONE());
+  mrb_define_module_function(mrb, mrb_sdl_class, "stop_text_input", mrb_sdl_stop_text_input, MRB_ARGS_NONE());
+
   init_mrb_sdl_window(mrb, mrb_sdl_class);
   init_mrb_sdl_event(mrb, mrb_sdl_class);
   init_mrb_sdl_gl_context(mrb, mrb_sdl_class);
