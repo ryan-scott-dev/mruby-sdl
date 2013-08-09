@@ -208,6 +208,10 @@ mrb_sdl_event_keycode_to_sym(mrb_state *mrb, SDL_Keycode keycode)
       return mrb_symbol_value(mrb_intern_cstr(mrb, "up"));
     case (SDLK_DOWN):
       return mrb_symbol_value(mrb_intern_cstr(mrb, "down"));
+    case (SDLK_RETURN):
+      return mrb_symbol_value(mrb_intern_cstr(mrb, "return"));
+    case (SDLK_BACKSPACE):
+      return mrb_symbol_value(mrb_intern_cstr(mrb, "backspace"));
   }
 
   return mrb_nil_value();
