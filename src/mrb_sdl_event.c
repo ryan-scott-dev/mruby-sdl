@@ -27,7 +27,7 @@ mrb_sdl_event_wrap(mrb_state *mrb, SDL_Event event)
 struct mrb_sdl_event*
 mrb_sdl_event_get_ptr(mrb_state* mrb, mrb_value value)
 {
-  return (struct mrb_sdl_event*)mrb_data_get_ptr(mrb, value, &mrb_sdl_event_get_ptr_type);
+  return DATA_CHECK_GET_PTR(mrb, value, &mrb_sdl_event_get_ptr_type, struct mrb_sdl_event);
 }
 
 mrb_value

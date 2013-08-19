@@ -27,7 +27,7 @@ mrb_sdl_gl_context_wrap(mrb_state *mrb, SDL_GLContext context)
 struct mrb_sdl_gl_context*
 mrb_sdl_gl_context_get_ptr(mrb_state* mrb, mrb_value value)
 {
-  return (struct mrb_sdl_gl_context*)mrb_data_get_ptr(mrb, value, &mrb_sdl_gl_context_get_ptr_type);
+  return DATA_CHECK_GET_PTR(mrb, value, &mrb_sdl_gl_context_get_ptr_type, struct mrb_sdl_gl_context);
 }
 
 mrb_value 

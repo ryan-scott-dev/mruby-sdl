@@ -34,7 +34,7 @@ mrb_sdl_music_wrap(mrb_state *mrb, Mix_Music *music)
 struct mrb_sdl_music*
 mrb_sdl_music_get_ptr(mrb_state* mrb, mrb_value value)
 {
-  return (struct mrb_sdl_music*)mrb_data_get_ptr(mrb, value, &mrb_sdl_music_get_ptr_type);
+  return DATA_CHECK_GET_PTR(mrb, value, &mrb_sdl_music_get_ptr_type, struct mrb_sdl_music);
 }
 
 mrb_value
