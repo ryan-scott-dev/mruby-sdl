@@ -73,7 +73,7 @@ mrb_sdl_gl_error(mrb_state* mrb, mrb_value self)
     return mrb_nil_value();
   }
 
-  return mrb_fixnum_value(error);
+  return mrb_str_new_cstr(mrb, gluErrorString(error));
 }
 
 mrb_value 
@@ -89,6 +89,20 @@ mrb_sdl_gl_viewport(mrb_state* mrb, mrb_value self)
 mrb_value 
 mrb_sdl_gl_blend_alpha_transparency(mrb_state* mrb, mrb_value self)
 {
+  glEnable(GL_DEPTH_TEST);
+  glDepthMask(GL_TRUE);
+  
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glEnable(GL_BLEND);
+
+  return self;
+}
+
+mrb_value 
+mrb_sdl_gl_blend_alpha_transparency_without_depth(mrb_state* mrb, mrb_value self)
+{
+  glDisable(GL_DEPTH_TEST);
+
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   
@@ -98,6 +112,9 @@ mrb_sdl_gl_blend_alpha_transparency(mrb_state* mrb, mrb_value self)
 mrb_value 
 mrb_sdl_gl_blend_opaque (mrb_state* mrb, mrb_value self)
 {
+  glEnable(GL_DEPTH_TEST);
+
+  glDepthMask(GL_TRUE);
   glDisable(GL_BLEND);
   
   return self;
@@ -109,9 +126,11 @@ init_mrb_sdl_gl(mrb_state* mrb) {
   mrb_define_module_function(mrb, mrb_sdl_gl_class, "clear", mrb_sdl_gl_clear, MRB_ARGS_NONE());
   mrb_define_module_function(mrb, mrb_sdl_gl_class, "set_clear_color", mrb_sdl_gl_set_clear_color, MRB_ARGS_REQ(3));
   mrb_define_module_function(mrb, mrb_sdl_gl_class, "set_clear_flags", mrb_sdl_gl_set_clear_flags, MRB_ARGS_REQ(1));
-
+  
   mrb_define_module_function(mrb, mrb_sdl_gl_class, "error", mrb_sdl_gl_error, MRB_ARGS_NONE());
 
+  
+  mrb_define_module_function(mrb, mrb_sdl_gl_class, "blend_alpha_transparency_without_depth", mrb_sdl_gl_blend_alpha_transparency_without_depth, MRB_ARGS_NONE());
   mrb_define_module_function(mrb, mrb_sdl_gl_class, "blend_alpha_transparency", mrb_sdl_gl_blend_alpha_transparency, MRB_ARGS_NONE());
   mrb_define_module_function(mrb, mrb_sdl_gl_class, "blend_opaque", mrb_sdl_gl_blend_opaque, MRB_ARGS_NONE());
   

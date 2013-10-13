@@ -7,10 +7,16 @@
   #define glBindVertexArray glBindVertexArrayOES
   #define glGenVertexArrays glGenVertexArraysOES
   #define glDeleteVertexArrays glDeleteVertexArraysOES
-	#define GL_RED GL_RED_EXT
+  #define GL_RED GL_RED_EXT
 #else 
   #define GL_GLEXT_PROTOTYPES
   #include <SDL2/SDL_opengl.h>
+
+	#if defined(__MACOSX__)
+		#include <OpenGL/glu.h>
+	#else
+		#include <GL/glu.h>
+	#endif
 #endif
 
 #endif
